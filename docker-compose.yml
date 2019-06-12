@@ -1,0 +1,25 @@
+version: '3'
+services:
+  registry-local:
+    build:
+      context: .
+      dockerfile: Dockerfile.registry-gui
+    image: myregistry:local
+    ports:
+      - "5551:5551"
+    restart: always
+  registry-cache:
+    build:
+      context: .
+      dockerfile: Dockerfile.hub-mirror
+    image: myregistry:cache
+    ports:
+      - "5552:5552"
+    restart: always
+  registry-ui:
+    image: joxit/docker-registry-ui:static
+    ports:
+      - "8880:80"
+    environment:
+      - "URL=http://localhost:5551"
+      - "DELETE_IMAGES=true"
