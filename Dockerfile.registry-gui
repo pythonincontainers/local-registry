@@ -1,0 +1,3 @@
+FROM registry:2
+COPY registry-gui.yml /etc/docker/registry/config.yml
+EXPOSE 5551

@@ -1,0 +1,37 @@
+# Customized "/etc/docker/registry/config.yml" file to be used in
+# a Container implementing Local Registry intended to be managed with
+# "docker-registry-ui".
+# All customizations follow the example at https://joxit.dev/docker-registry-ui/
+
+version: 0.1
+log:
+  fields:
+    service: registry
+storage:
+  cache:
+    blobdescriptor: inmemory
+  filesystem:
+    rootdirectory: /var/lib/registry
+# Added delete enabled true to allow Image Delete
+  delete:
+    enabled: true
+http:
+# Customized Local Registry Port to avoid collition with Flask examples
+  addr: :5551
+  headers:
+    X-Content-Type-Options: [nosniff]
+# Extra headers required by "docker-registry-ui"
+# Access-Control-Allow-Origin must include actual address
+# to access "docker-registry-ui" Container
+# This setting assumes port mapping of 8880:80
+    Access-Control-Allow-Origin: ['http://localhost:8880']
+    Access-Control-Allow-Methods: ['HEAD', 'GET', 'OPTIONS', 'DELETE']
+    Access-Control-Allow-Headers: ['Authorization']
+    Access-Control-Max-Age: [1728000]
+    Access-Control-Allow-Credentials: [true]
+    Access-Control-Expose-Headers: ['Docker-Content-Digest']
+health:
+  storagedriver:
+    enabled: true
+    interval: 10s
+    threshold: 3
